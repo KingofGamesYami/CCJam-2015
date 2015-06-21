@@ -79,7 +79,9 @@ while true do
   last = current
   current = {}
   toExecute = {}
-  print( os.clock() - time )
+  if os.clock() - time >= 0.3 then
+    os.queueEvent( "timer", id )
+  end
   while true do
     local event, tid = os.pullEvent( "timer" )
     if id == tid then
