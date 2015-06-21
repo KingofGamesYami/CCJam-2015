@@ -37,7 +37,7 @@ local pos
 local toExecute = {}
 
 local function checkPlatform()
-  while #p > 0 do
+  while #platform > 0 do
     local  v = table.remove( platform, #platform )
     local b = pos + v
     local bstr = b:tostring()
