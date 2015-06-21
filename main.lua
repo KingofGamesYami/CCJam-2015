@@ -8,6 +8,10 @@ if #tArgs ~= 1 and #tArgs ~= 2 then
   error()
 end
 
+if not commands then
+  error( "This program requires a command computer", 0 )
+end
+
 local rad = tonumber( tArgs[ 2 ] ) or 2
 
 local platform = {}
@@ -15,7 +19,9 @@ local platform = {}
 local function fillP()
   for x = -rad, rad do
     for z = -rad, rad do
-      platform[ #platform + 1 ] = vector.new( x, 0, z )
+      if math.sqrt( x ^ 2 + z ^ 2 ) <= rad then
+        platform[ #platform + 1 ] = vector.new( x, 0, z )
+      end
     end
   end
 end
