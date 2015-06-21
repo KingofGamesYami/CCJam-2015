@@ -3,8 +3,8 @@
 local _POSITION_ = { commands.getBlockPosition() }
 
 local tArgs = { ... }
-if #tArgs ~= 1 and #tArgs ~= 2 then
-  print( "Usage: platform <username> [radius]" )
+if #tArgs < 1 or #tArgs > 3 then
+  print( "Usage: platform <username> [radius] [block]" )
   error()
 end
 
@@ -13,6 +13,7 @@ if not commands then
 end
 
 local rad = tonumber( tArgs[ 2 ] ) or 2
+local block = tArgs[ 3 ] or "minecraft:glass"
 
 local platform = {}
 
@@ -29,7 +30,7 @@ end
 local function getPlayerPosition( p )
   local success, t = commands.exec( "/tp " .. p .. " ~ ~ ~" )
   if not success then
-    return false
+    error( "Invalid Player or Block", 0 )
   end
   local x, y, z = t[1]:match( "to (%-?%d+%.?%d*),(%-?%d+%.?%d*),(%-?%d+%.?%d*)" )
   return math.floor( x ), math.floor( y ), math.floor( z )
@@ -47,13 +48,13 @@ local function checkPlatform()
     local  v = table.remove( platform, #platform )
     local b = pos + v
     local bstr = b:tostring()
-    local name = (last[bstr] and "glass") or commands.getBlockInfo( b.x, b.y, b.z ).name
+    local name = (last[bstr] and "minecraft:glass") or commands.getBlockInfo( b.x, b.y, b.z ).name
     if name == "minecraft:air" then
       current[ bstr ] = b
       if not last[ bstr ] then
-        toExecute[ #toExecute + 1 ] = "setblock " .. b.x .. " " .. b.y .. " " .. b.z .. " minecraft:glass"
+        toExecute[ #toExecute + 1 ] = "setblock " .. b.x .. " " .. b.y .. " " .. b.z .. " " .. block
       end
-    elseif name == "glass" then
+    elseif name == "minecraft:glass" then
       current[ bstr ] = b
     end
     last[ bstr ] = nil
